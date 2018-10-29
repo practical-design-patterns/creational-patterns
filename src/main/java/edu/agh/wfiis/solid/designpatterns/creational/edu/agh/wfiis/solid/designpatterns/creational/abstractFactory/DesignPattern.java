@@ -40,7 +40,7 @@ public class DesignPattern {
             PythonEnvironment.setUp();
             this.patternCode = PythonEnvironment.compile(patternCode);
         } else if (language.equalsIgnoreCase("c#")) {
-            throw new UnsupportedOperationException("No fkng way!");
+            throw new UnsupportedOperationException("really?");
         } else {
             throw new IllegalArgumentException("Unknown language");
         }
