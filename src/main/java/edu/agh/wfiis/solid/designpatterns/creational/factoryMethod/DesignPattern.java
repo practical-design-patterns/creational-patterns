@@ -9,12 +9,7 @@ public class DesignPattern {
     private final RunnableCode patternCode;
 
     public RunnableCode refactor(String badCode) {
-        if (patternCode instanceof JavaCode) {
-            return JavaEnvironment.run(patternCode.run(badCode));
-        } else if (patternCode instanceof PythonCode) {
-            return PythonEnvironment.run(patternCode.run(badCode));
-        }
-        return null;
+        return patternCode.run(badCode);
     }
 
     public DesignPattern(String name, String patternCode, String language) {
@@ -31,7 +26,7 @@ public class DesignPattern {
             PythonEnvironment.setUp();
             this.patternCode = PythonEnvironment.compile(patternCode);
         } else if (language.equalsIgnoreCase("c#")) {
-            throw new UnsupportedOperationException("No fkng way!");
+            throw new UnsupportedOperationException("really?");
         } else {
             throw new IllegalArgumentException("Unknown language");
         }
@@ -75,11 +70,6 @@ class PythonEnvironment {
         //magic happens here
         return new PythonCode();
     }
-
-    static RunnableCode run(RunnableCode code) {
-        //magic happens here
-        return new PythonCode();
-    }
 }
 
 class JavaEnvironment {
@@ -88,11 +78,6 @@ class JavaEnvironment {
     }
 
     static RunnableCode compile(String code) {
-        //magic happens here
-        return new JavaCode();
-    }
-
-    static RunnableCode run(RunnableCode code) {
         //magic happens here
         return new JavaCode();
     }
