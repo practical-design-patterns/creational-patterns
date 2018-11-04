@@ -4,51 +4,26 @@ import java.util.Objects;
 
 public class DesignPattern {
 
-    private final String name;
-
-    private final RunnableCode patternCode;
+    private final DesignPatternProvider designPatternProvider;
 
     public RunnableCode refactor(String badCode) {
-        if (patternCode instanceof JavaCode) {
-            return JavaEnvironment.run(patternCode.run(badCode));
-        } else if (patternCode instanceof PythonCode) {
-            return PythonEnvironment.run(patternCode.run(badCode));
-        }
-        return null;
+        return designPatternProvider.refactor(badCode);
     }
 
-    public String showExample(){
-        if (patternCode instanceof JavaCode) {
-            return JavaCodeExamplesLibrary.getPatternExample(name);
-        } else if (patternCode instanceof PythonCode) {
-            return PythonCodeExamplesLibrary.getPatternExample(name);
-        }
-        return null;
+    public String showExample() {
+        return designPatternProvider.showExample();
     }
 
-    public DesignPattern(String name, String patternCode, String language) {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(patternCode);
-        Objects.requireNonNull(language);
+    public DesignPattern(DesignPatternProvider designPatternProvider) {
+        Objects.requireNonNull(designPatternProvider);
 
-        this.name = name;
-
-        if (language.equalsIgnoreCase("java")) {
-            JavaEnvironment.setUp();
-            this.patternCode = JavaEnvironment.compile(patternCode);
-        } else if (language.equalsIgnoreCase("python")) {
-            PythonEnvironment.setUp();
-            this.patternCode = PythonEnvironment.compile(patternCode);
-        } else if (language.equalsIgnoreCase("c#")) {
-            throw new UnsupportedOperationException("really?");
-        } else {
-            throw new IllegalArgumentException("Unknown language");
-        }
+        this.designPatternProvider = designPatternProvider;
     }
 
 
     public static void main(String args[]) {
-        DesignPattern designPattern = new DesignPattern("builder", " public Builder {....", "java");
+        JavaDesignPatternProvider builder = new JavaBuilderProvider();
+        DesignPattern designPattern = new DesignPattern(builder);
         designPattern.refactor("public class ClassWithManyConstructors...");
     }
 }
@@ -109,14 +84,15 @@ class JavaEnvironment {
 
 class JavaCodeExamplesLibrary {
 
-    static String getPatternExample(String patternName){
+    static String getPatternExample(String patternName) {
         //magic happens here
         return null;
     }
 }
+
 class PythonCodeExamplesLibrary {
 
-    static String getPatternExample(String patternName){
+    static String getPatternExample(String patternName) {
         //magic happens here
         return null;
     }
