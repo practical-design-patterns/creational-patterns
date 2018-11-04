@@ -1,40 +1,21 @@
 package edu.agh.wfiis.solid.designpatterns.creational.factoryMethod;
 
-import java.util.Objects;
+abstract public class DesignPattern {
 
-public class DesignPattern {
+    protected final String name;
 
-    private final String name;
-
-    private final RunnableCode patternCode;
+    protected DesignPattern(String name) {
+        this.name = name;
+    }
 
     public RunnableCode refactor(String badCode) {
-        return patternCode.run(badCode);
+        return getPatternCode().run(badCode);
     }
 
-    public DesignPattern(String name, String patternCode, String language) {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(patternCode);
-        Objects.requireNonNull(language);
-
-        this.name = name;
-
-        if (language.equalsIgnoreCase("java")) {
-            JavaEnvironment.setUp();
-            this.patternCode = JavaEnvironment.compile(patternCode);
-        } else if (language.equalsIgnoreCase("python")) {
-            PythonEnvironment.setUp();
-            this.patternCode = PythonEnvironment.compile(patternCode);
-        } else if (language.equalsIgnoreCase("c#")) {
-            throw new UnsupportedOperationException("really?");
-        } else {
-            throw new IllegalArgumentException("Unknown language");
-        }
-    }
-
+    abstract RunnableCode getPatternCode();
 
     public static void main(String args[]) {
-        DesignPattern designPattern = new DesignPattern("builder", " public Builder {....", "java");
+        DesignPattern designPattern = new JavaBuilder();
         designPattern.refactor("public class ClassWithManyConstructors...");
     }
 }
