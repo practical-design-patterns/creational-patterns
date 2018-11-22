@@ -1,9 +1,6 @@
 package edu.agh.wfiis.solid.designpatterns.creational.builder;
 
-import java.util.Objects;
-
 public class DesignPattern {
-
     private final String name;
 
     private final String type;
@@ -14,11 +11,17 @@ public class DesignPattern {
 
     private final String example;
 
-    public DesignPattern(String name, String type, String code, String description, String example) {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(type);
-        Objects.requireNonNull(code);
+    public static NeedName builder(){
+        return new Builder();
+    }
 
+    private DesignPattern(
+            String name,
+            String type,
+            String code,
+            String description,
+            String example
+    ) {
         this.name = name;
         this.type = type;
         this.code = code;
@@ -26,54 +29,91 @@ public class DesignPattern {
         this.example = example;
     }
 
-    public static Builder builder(){
-        return new Builder();
-    }
-
-    private static class Builder {
-
+    private static class Builder implements BuildingDesignPattern {
         private String name;
-
         private String type;
-
         private String code;
-
         private String description;
-
         private String example;
 
-        public Builder withName(String name) {
+        @Override
+        public NeedType name(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder withType(String type) {
+        @Override
+        public NeedCode type(String type) {
             this.type = type;
             return this;
         }
 
-        public Builder withCode(String code) {
+        @Override
+        public BuildOrExpand code(String code) {
             this.code = code;
             return this;
         }
 
-        public Builder withDescription(String description) {
+        @Override
+        public NeedOptional with() {
+            return this;
+        }
+
+        @Override
+        public BuildOrExpand description(String description) {
             this.description = description;
             return this;
         }
 
-        public Builder withExample(String example) {
+        @Override
+        public BuildOrExpand example(String example) {
             this.example = example;
             return this;
         }
 
+        @Override
         public DesignPattern build() {
-            DesignPattern designPattern = new DesignPattern(name, type, code, description, example);
-            return designPattern;
+            return new DesignPattern(name, type, code, description, example);
         }
     }
 
+    interface BuildingDesignPattern extends NeedName, NeedType, NeedCode, NeedOptional, BuildOrExpand {}
+
+    interface NeedName {
+        NeedType name(String name);
+    }
+
+    interface NeedType {
+        NeedCode type(String type);
+    }
+
+    interface NeedCode {
+        BuildOrExpand code(String code);
+    }
+
+    interface BuildOrExpand {
+        NeedOptional with();
+        DesignPattern build();
+    }
+
+    interface NeedOptional {
+        BuildOrExpand description(String description);
+        BuildOrExpand example(String example);
+    }
+
     public static void main(String args[]){
-        DesignPattern designPattern = DesignPattern.builder().withName("Builder").withType("creational").build();
+        DesignPattern builder = DesignPattern.builder()
+                                             .name("Builder")
+                                             .type("creational")
+                                             .code("Some builder code")
+                                             .build();
+
+        DesignPattern strategy = DesignPattern.builder()
+                                              .name("Strategy")
+                                              .type("behavioral")
+                                              .code("Some strategy code")
+                                              .with().description("This is a strategy pattern")
+                                              .with().example("Some strategy example")
+                                              .build();
     }
 }
