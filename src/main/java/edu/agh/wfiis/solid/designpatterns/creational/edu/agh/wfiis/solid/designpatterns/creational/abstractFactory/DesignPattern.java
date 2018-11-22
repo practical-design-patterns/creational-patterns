@@ -1,4 +1,4 @@
-package edu.agh.wfiis.solid.designpatterns.creational.edu.agh.wfiis.solid.designpatterns.creational.abstractFactory;
+package edu.agh.wfiis.solid.designpatterns.creational.abstractFactory;
 
 import java.util.Objects;
 
